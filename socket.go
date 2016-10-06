@@ -36,6 +36,9 @@ type Socket interface {
 
 	// BroadcastTo broadcasts an event to the room with given args.
 	BroadcastTo(room, event string, args ...interface{}) error
+
+	// RoomEach iterate through each socket in a room and call the callback func, breaking if it returns false
+	RoomEach(room string, cbFunc func(id string, so Socket) bool)
 }
 
 type socket struct {

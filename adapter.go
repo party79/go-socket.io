@@ -13,6 +13,9 @@ type BroadcastAdaptor interface {
 
 	// Send will send an event with args to the room. If "ignore" is not nil, the event will be excluded from being sent to "ignore".
 	Send(ignore Socket, room, event string, args ...interface{}) error
+
+	// RoomEach iterate through each socket in a room and call the callback func, breaking if it returns false
+	RoomEach(room string, cbFunc func(id string, so Socket) bool)
 }
 
 var newBroadcast = newBroadcastDefault
@@ -67,4 +70,15 @@ func (b *broadcast) Send(ignore Socket, room, event string, args ...interface{})
 	}
 	b.RUnlock()
 	return nil
+}
+
+func (b *broadcast) RoomEach(room string, cbFunc func(id string, so Socket) bool) {
+	b.RLock()
+	sockets := b.m[room]
+	for id, s := range sockets {
+		if !cbFunc(id, s) {
+			break
+		}
+	}
+	b.RUnlock()
 }

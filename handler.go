@@ -124,6 +124,14 @@ func (h *socketHandler) BroadcastTo(room, event string, args ...interface{}) err
 	return h.baseHandler.broadcast.Send(h.socket, h.broadcastName(room), event, args...)
 }
 
+func (h *baseHandler) RoomEach(room string, cbFunc func(id string, so Socket) bool) {
+	h.broadcast.RoomEach(h.broadcastName(room), cbFunc)
+}
+
+func (h *socketHandler) RoomEach(room string, cbFunc func(id string, so Socket) bool) {
+	h.baseHandler.broadcast.RoomEach(h.broadcastName(room), cbFunc)
+}
+
 func (h *baseHandler) broadcastName(room string) string {
 	return fmt.Sprintf("%s:%s", h.name, room)
 }

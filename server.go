@@ -93,6 +93,11 @@ func (s *Server) BroadcastTo(room, message string, args ...interface{}) {
 	s.namespace.BroadcastTo(room, message, args...)
 }
 
+// RoomEach is a server level room integrator function.
+func (s *Server) RoomEach(room string, cbFunc func(id string, so Socket) bool) {
+	s.namespace.RoomEach(room, cbFunc)
+}
+
 func (s *Server) loop() {
 	for {
 		conn, err := s.eio.Accept()
