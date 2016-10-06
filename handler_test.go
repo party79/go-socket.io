@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/party79/go-engine.io"
+	"github.com/party79/go-engine.io/transport"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -22,6 +23,9 @@ func (f *FakeBroadcastAdaptor) Leave(room string, socket Socket) error {
 
 func (f *FakeBroadcastAdaptor) Send(ignore Socket, room, event string, args ...interface{}) error {
 	return nil
+}
+
+func (f *FakeBroadcastAdaptor) RoomEach(room string, cbFunc func(id string, so Socket) bool) {
 }
 
 type FakeReadCloser struct{}
@@ -49,6 +53,10 @@ type FakeSockConnection struct{}
 
 func (f *FakeSockConnection) Id() string {
 	return "test1"
+}
+
+func (f *FakeSockConnection) Transport() transport.Server {
+	return nil
 }
 
 func (f *FakeSockConnection) Request() *http.Request {
